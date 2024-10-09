@@ -11,6 +11,19 @@ jobs:
   test:
     name: Test
     runs-on: ubuntu-latest
+   
+    services:
+      postgres:
+        image: postgres:12
+        env:
+          POSTGRES_HOST: root
+          POSTGRES_PASSWORD: pX4f6My
+          POSTGRES_DB: simple_bank
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
     steps:
 
     - name: Set up Go
@@ -20,7 +33,11 @@ jobs:
 
     - name: Check out code into the Go module directory
       uses: actions/checkout@v2
-
+    - name: Run migrateup
+      run: make migrateup
     - name: Test
       run: make test
+
+
+
 
